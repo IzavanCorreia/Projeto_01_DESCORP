@@ -5,14 +5,22 @@
 package com.projeto.jpa.teste;
 
 import com.projeto.jpa.Legume;
+import com.projeto.jpa.Mercadoria;
+import jakarta.persistence.CacheRetrieveMode;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.TypedQuery;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -24,11 +32,14 @@ import org.junit.Test;
 public class LegumeTeste {
     
     private static EntityManagerFactory emf;
+    protected static Logger logger;
     private static EntityManager em;
     private EntityTransaction et;
 
     @BeforeClass
     public static void setUpClass() {
+        logger = Logger.getGlobal();
+        logger.setLevel(Level.INFO);
         emf = Persistence.createEntityManagerFactory("Projeto_01");
         DbUnitUtil.inserirDados();
     }
@@ -52,6 +63,7 @@ public class LegumeTeste {
         }
         em.close();
     }
+     
 
     @Test
     public void persistirLegume() {
@@ -70,8 +82,8 @@ public class LegumeTeste {
         assertEquals("sem fertilizante", legume.getFertilizante());
         assertEquals("solo rico em ferro", legume.getTipoSolo());
     }
-
-    private Legume criarLegume() {
+    
+       private Legume criarLegume() {
         Legume legume = new Legume();
         legume.setNome("rúcula");
         legume.setCodigo("003");
@@ -82,5 +94,53 @@ public class LegumeTeste {
         legume.setFertilizante("usa fertilizante para controle de insetos");
         legume.setTipoSolo("solo molhado e rico em matéria orgânica");    
         return legume;
+    } 
+
+    @Test
+    public void atualizarLegume() {
+        logger.info("Executando atualizarLegume()");
+        String novaDescricao = "Alface muito verde e novo para consumo";
+        String novoFertilizante = "Utiliza fertilizantes naturais";
+        Long id = 3L;
+        Legume legume = em.find(Legume.class, id);
+        legume.setDescricao(novaDescricao);
+        legume.setFertilizante(novoFertilizante);
+        
+        em.flush();
+        String jpql = "SELECT l FROM Legume l WHERE l.id = ?1";
+        TypedQuery<Legume> query = em.createQuery(jpql, Legume.class);
+        query.setHint("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
+        query.setParameter(1, id);
+        legume = query.getSingleResult();
+        assertEquals(novaDescricao, legume.getDescricao());
+        assertEquals(novoFertilizante, legume.getFertilizante());
+    }
+
+    @Test
+    public void atualizarLegumeMerge() {
+        logger.info("Executando atualizarLegumeMerge()");
+        String novaDescricao = "Espinafre muito gostoso";
+        String novoFertilizante = "Sem nenhum fertilizante";
+        Long id = 4L;
+        Legume legume = em.find(Legume.class, id);
+        legume.setDescricao(novaDescricao);
+        legume.setFertilizante(novoFertilizante);
+        em.clear();
+        em.merge(legume);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
+        legume = em.find(Legume.class, id, properties);
+        assertEquals(novaDescricao, legume.getDescricao());
+        assertEquals(novoFertilizante, legume.getFertilizante());
+    }
+
+    @Test
+    public void removerMercadoria() {
+        logger.info("Executando removerMercadoria()");
+        Mercadoria mercadoria = em.find(Mercadoria.class, 5L);
+        em.remove(mercadoria);
+        
+        Legume legume = em.find(Legume.class, 5L);
+        assertNull(legume);
     }
 }

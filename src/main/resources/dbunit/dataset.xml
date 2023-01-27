@@ -9,7 +9,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
     <TB_FAZENDA txt_nome="Fazenda dia feliz" txt_cnpj="222.323.233-15" txt_qtd_equitares="300" end_txt_bairro="Cajueiro Seco" end_txt_cep="54330-220" end_txt_cidade="Recife"  end_txt_estado="Pernambuco" end_txt_logradouro="Rua Nossa Senhora do Carmo" end_numero="515"/>
     <TB_FAZENDEIRO txt_tipo_usuario="FAZENDEIRO" txt_cpf="808.257.284-10" dt_nascimento="2006-12-26" txt_email="fazendeiro@gmail.com"  txt_login="fazendeiro" txt_nome="fazendeiro da silva" txt_senha="senha" id_fazenda="1"/>
 
-    <TB_FAZENDA txt_nome="Fazenda caminho da paz" txt_cnpj="452.663.273-55" txt_qtd_equitares="380" end_txt_bairro="Cabo de Santo Agostinho" end_txt_cep="54530-900" end_txt_cidade="Recife"  end_txt_estado="Pernambuco" end_txt_logradouro="Rua Carlos Dias" end_numero="885"/>
+    <TB_FAZENDA txt_nome="Fazenda caminho da paz" txt_cnpj="452.663.273-55" txt_qtd_equitares="380" end_txt_bairro="Candeias" end_txt_cep="54530-900" end_txt_cidade="Jaboatão dos Guararapes"  end_txt_estado="Pernambuco" end_txt_logradouro="Rua Carlos Dias" end_numero="885"/>
     <TB_FAZENDEIRO txt_tipo_usuario="FAZENDEIRO" txt_cpf="560.877.478-36" dt_nascimento="2001-02-18" txt_email="lucashenrique@gmail.com"  txt_login="lucas" txt_nome="Lucas Henrique" txt_senha="usersenha" id_fazenda="2"/>    
     
     <TB_FAVORITO txt_nome="morango"  txt_descricao="morango muito azedo" txt_tipo="fruta"/>
@@ -19,6 +19,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
     <TB_FAVORITO txt_nome="uva"  txt_descricao="uva super doce" txt_tipo="fruta"/>
     <TB_CLIENTE txt_tipo_usuario="CLIENTE" txt_cpf="574.015.546-50" dt_nascimento="1999-08-24" txt_email="roberto@gmail.com" txt_login="roberto" txt_nome="Roberto Carlos" txt_senha="roberto123" id_favorito = "2"/>   
     <TB_CONTATOS id_cliente="2" txt_num_contatos="(81) 98854-2754"/>
+    
+    <TB_FAVORITO txt_nome="alface"  txt_descricao="alface muito verde" txt_tipo="legume"/>
       
     <TB_PRODUTO txt_nome="morango" txt_codigo="006" txt_tipo="fruta" txt_validade="8 dias"/>
     <TB_PRODUTO txt_nome="uva" txt_codigo="007" txt_tipo="fruta" txt_validade="10 dias"/> 
@@ -31,9 +33,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
     <TB_MERCADORIA disc_mercadoria = "F" txt_nome="laranja" txt_codigo="009" txt_tipo="com agrotóxico" txt_validade="7 dias"/>
     <TB_MERCADORIA disc_mercadoria = "L" txt_nome="alface" txt_codigo="010" txt_tipo="sem agrotóxico" txt_validade="16 dias"/>
     <TB_MERCADORIA disc_mercadoria = "L" txt_nome="espinafre" txt_codigo="011" txt_tipo="com agrotóxico" txt_validade="22 dias"/>
+    <TB_MERCADORIA disc_mercadoria = "L" txt_nome="cenoura" txt_codigo="012" txt_tipo="com agrotóxico" txt_validade="30 dias"/>
     <TB_FRUTA num_quantidade_fruta="200" txt_descricao="graviola para sucos" txt_maturacao="maduro" id_mercadoria = "1"/>
     <TB_FRUTA num_quantidade_fruta="125" txt_descricao="rica em vitamina c" txt_maturacao="quase maduro" id_mercadoria = "2"/>
     <TB_LEGUME num_quantidade_legume="60" txt_descricao="alface novinho" txt_fertilizante="sem fertilizante" txt_tipo_solo="solo rico em ferro" id_mercadoria = "3"/>
     <TB_LEGUME num_quantidade_legume="30" txt_descricao="espinafre orgânico" txt_fertilizante="sem fertilizante" txt_tipo_solo="solo adubado" id_mercadoria = "4"/>
+    <TB_LEGUME num_quantidade_legume="45" txt_descricao="cenoura orgânica" txt_fertilizante="com fertilizante" txt_tipo_solo="solo molhado" id_mercadoria = "5"/>
     
 </dataset>

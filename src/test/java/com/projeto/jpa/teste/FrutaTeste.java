@@ -5,10 +5,15 @@
 package com.projeto.jpa.teste;
 
 import com.projeto.jpa.Fruta;
+import com.projeto.jpa.Mercadoria;
+import jakarta.persistence.CacheRetrieveMode;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.TypedQuery;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
@@ -16,6 +21,9 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static org.junit.Assert.assertNull;
 
 /**
  *
@@ -24,11 +32,14 @@ import org.junit.Test;
 public class FrutaTeste {
 
     private static EntityManagerFactory emf;
+    protected static Logger logger;
     private static EntityManager em;
     private EntityTransaction et;
 
     @BeforeClass
     public static void setUpClass() {
+        logger = Logger.getGlobal();
+        logger.setLevel(Level.INFO);
         emf = Persistence.createEntityManagerFactory("Projeto_01");
         DbUnitUtil.inserirDados();
     }
@@ -66,8 +77,8 @@ public class FrutaTeste {
     public void consultarFruta() {
         Fruta fruta = em.find(Fruta.class, 1L);
         assertNotNull(fruta);
-        assertEquals("graviola para sucos", fruta.getDescricao());
-        assertEquals("maduro", fruta.getMaturacao());
+        assertEquals("Graviola para sorvetes e sucos naturais", fruta.getDescricao());
+        assertEquals("Muito maduro", fruta.getMaturacao());
     }
 
     private Fruta criarFruta() {
@@ -80,5 +91,53 @@ public class FrutaTeste {
         fruta.setDescricao("muito doce");
         fruta.setMaturacao("bem maduros");
         return fruta;
+    }
+    
+    @Test
+    public void atualizarFruta() {
+        logger.info("Executando atualizarFruta()");
+        String novaDescricao = "Graviola para sorvetes e sucos naturais";
+        String novaMaturacao = "Muito maduro";
+        Long id = 1L;
+        Fruta fruta = em.find(Fruta.class, id);
+        fruta.setDescricao(novaDescricao);
+        fruta.setMaturacao(novaMaturacao);
+        
+        em.flush();
+        String jpql = "SELECT f FROM Fruta f WHERE f.id = ?1";
+        TypedQuery<Fruta> query = em.createQuery(jpql, Fruta.class);
+        query.setHint("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
+        query.setParameter(1, id);
+        fruta = query.getSingleResult();
+        assertEquals(novaDescricao, fruta.getDescricao());
+        assertEquals(novaMaturacao, fruta.getMaturacao());
+    }
+
+    @Test
+    public void atualizarFrutaMerge() {
+        logger.info("Executando atualizarFrutaMerge()");
+        String novaDescricao = "Rico em vitaminas e sais minerais";
+        String novaMaturacao = "Verde";
+        Long id = 2L;
+        Fruta fruta = em.find(Fruta.class, id);
+        fruta.setDescricao(novaDescricao);
+        fruta.setMaturacao(novaMaturacao);
+        em.clear();
+        em.merge(fruta);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
+        fruta = em.find(Fruta.class, id, properties);
+        assertEquals(novaDescricao, fruta.getDescricao());
+        assertEquals(novaMaturacao, fruta.getMaturacao());
+    }
+
+    @Test
+    public void removerMercadoria() {
+        logger.info("Executando removerMercadoria()");
+        Mercadoria mercadoria = em.find(Mercadoria.class, 5L);
+        em.remove(mercadoria);
+        
+        Fruta fruta = em.find(Fruta.class, 5L);
+        assertNull(fruta);
     }
 }

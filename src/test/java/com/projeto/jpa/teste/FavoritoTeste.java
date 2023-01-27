@@ -7,11 +7,17 @@ package com.projeto.jpa.teste;
 import com.projeto.jpa.Cliente;
 import com.projeto.jpa.Favorito;
 import com.projeto.jpa.TipoUsuario;
+import jakarta.persistence.CacheRetrieveMode;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.TypedQuery;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
@@ -27,11 +33,14 @@ import org.junit.Test;
 public class FavoritoTeste {
 
     private static EntityManagerFactory emf;
+    protected static Logger logger;
     private static EntityManager em;
     private EntityTransaction et;
 
     @BeforeClass
     public static void setUpClass() {
+        logger = Logger.getGlobal();
+        logger.setLevel(Level.INFO);
         emf = Persistence.createEntityManagerFactory("Projeto_01");
         DbUnitUtil.inserirDados();
     }
@@ -100,5 +109,50 @@ public class FavoritoTeste {
         favorito.adicionar(cliente1);
         
         return favorito;
+    }
+    
+    @Test
+    public void atualizarFavorito() {
+        logger.info("Executando atualizarFavorito()");
+        String novoNome = "Morango Verde";
+        String novoTipo = "Fruta tropical";
+        Long id = 1L;
+        Favorito favorito = em.find(Favorito.class, id);
+        favorito.setNome(novoNome);
+        favorito.setTipo(novoTipo);
+        
+        em.flush();
+        String jpql = "SELECT f FROM Favorito f WHERE f.id = ?1";
+        TypedQuery<Favorito> query = em.createQuery(jpql, Favorito.class);
+        query.setHint("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
+        query.setParameter(1, id);
+        favorito = query.getSingleResult();
+        assertEquals(novoNome, favorito.getNome());
+        assertEquals(novoTipo, favorito.getTipo());
+    }
+
+    @Test
+    public void atualizarFavoritoMerge() {
+        logger.info("Executando atualizarFavoritoMerge()");
+        String novoNome = "Uva verde";
+        String novoTipo = "Fruta doce";
+        Long id = 2L;
+        Favorito favorito = em.find(Favorito.class, id);
+        favorito.setNome(novoNome);
+        favorito.setTipo(novoTipo);
+        em.clear();
+        em.merge(favorito);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
+        favorito = em.find(Favorito.class, id, properties);
+        assertEquals(novoNome, favorito.getNome());
+        assertEquals(novoTipo, favorito.getTipo());
+    }
+
+    @Test
+    public void removerFavorito() {
+        logger.info("Executando removerFavorito()");
+        Favorito favorito = em.find(Favorito.class, 3L);
+        em.remove(favorito);
     }
 }

@@ -8,11 +8,17 @@ import com.projeto.jpa.Fazenda;
 import com.projeto.jpa.Fazendeiro;
 import com.projeto.jpa.Localizacao;
 import com.projeto.jpa.TipoUsuario;
+import jakarta.persistence.CacheRetrieveMode;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.TypedQuery;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
@@ -28,11 +34,14 @@ import org.junit.Test;
 public class FazendeiroTeste {
 
     private static EntityManagerFactory emf;
+    protected static Logger logger;
     private static EntityManager em;
     private EntityTransaction et;
 
     @BeforeClass
     public static void setUpClass() {
+        logger = Logger.getGlobal();
+        logger.setLevel(Level.INFO);
         emf = Persistence.createEntityManagerFactory("Projeto_01");
         DbUnitUtil.inserirDados();
     }
@@ -124,6 +133,51 @@ public class FazendeiroTeste {
         localizacao.setCep("52081-495");
         localizacao.setNumero(384);
         fazenda.setLocalizacao(localizacao);
+    }
+    
+    @Test
+    public void atualizarFazendeiro() {
+        logger.info("Executando atualizarFazendeiro()");
+        String novoEmail = "fazendeiroemailnovo@gmail.com";
+        String novoCpf = "985.766.258-13";
+        Long id = 1L;
+        Fazendeiro fazendeiro = em.find( Fazendeiro.class, id);
+        fazendeiro.setEmail(novoEmail);
+        fazendeiro.setCpf(novoCpf);
+
+        em.flush();
+        String jpql = "SELECT c FROM  Fazendeiro c WHERE c.id = ?1";
+        TypedQuery<Fazendeiro> query = em.createQuery(jpql,  Fazendeiro.class);
+        query.setHint("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
+        query.setParameter(1, id);
+        fazendeiro = query.getSingleResult();
+        assertEquals(novoEmail, fazendeiro.getEmail());
+        assertEquals(novoCpf, fazendeiro.getCpf());
+    }
+
+    @Test
+    public void atualizarFazendeiroMerge() {
+        logger.info("Executando atualizarFazendeiroMerge()");
+        String novoEmail = "fazendeirodomerger2@gmail.com";
+        String novoCpf = "874.333.212-44";
+        Long id = 2L;
+        Fazendeiro fazendeiro = em.find(Fazendeiro.class, id);
+        fazendeiro.setEmail(novoEmail);
+        fazendeiro.setCpf(novoCpf);
+        em.clear();
+        em.merge(fazendeiro);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("javax.persistence.cache.retrieveMode", CacheRetrieveMode.BYPASS);
+        fazendeiro = em.find(Fazendeiro.class, id, properties);
+        assertEquals(novoEmail, fazendeiro.getEmail());
+        assertEquals(novoCpf, fazendeiro.getCpf());
+    }
+
+   @Test
+    public void removerFazendeiro() {
+        logger.info("Executando removerFazendeiro()");
+        Fazendeiro fazendeiro = em.find(Fazendeiro.class, 3L);
+        em.remove(fazendeiro);
     }
 
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="5" failures="0" name="com.projeto.jpa.teste.FrutaTeste" time="0.469" errors="0" skipped="0">
+<testsuite tests="1" failures="0" name="com.projeto.jpa.teste.FeiranteJpqlTeste" time="0.11" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.8.0_202\jre\bin"/>
@@ -15,7 +15,7 @@
     <property name="user.country" value="BR"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value=""/>
-    <property name="test" value="com.projeto.jpa.teste.FrutaTeste"/>
+    <property name="test" value="com.projeto.jpa.teste.FeiranteJpqlTeste"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
     <property name="user.dir" value="C:\Users\Izavan\Documents\NetBeansProjects\projeto_01"/>
     <property name="java.runtime.version" value="1.8.0_202-b08"/>
@@ -48,7 +48,7 @@
     <property name="java.vm.specification.version" value="1.8"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.home" value="C:\Program Files\Java\jdk1.8.0_202\jre"/>
-    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher -Dtest=com.projeto.jpa.teste.FrutaTeste -Dmaven.ext.class.path=C:\Users\Izavan\Desktop\netbeans\java\maven-nblib\netbeans-eventspy.jar -Dfile.encoding=UTF-8 surefire:test"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher -Dtest=com.projeto.jpa.teste.FeiranteJpqlTeste -Dmaven.ext.class.path=C:\Users\Izavan\Desktop\netbeans\java\maven-nblib\netbeans-eventspy.jar -Dfile.encoding=UTF-8 surefire:test"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
     <property name="user.language" value="pt"/>
     <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
@@ -65,9 +65,5 @@
     <property name="sun.desktop" value="windows"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="com.projeto.jpa.teste.FrutaTeste" name="persistirFruta" time="0.065"/>
-  <testcase classname="com.projeto.jpa.teste.FrutaTeste" name="atualizarFrutaMerge" time="0.118"/>
-  <testcase classname="com.projeto.jpa.teste.FrutaTeste" name="removerMercadoria" time="0.026"/>
-  <testcase classname="com.projeto.jpa.teste.FrutaTeste" name="atualizarFruta" time="0.257"/>
-  <testcase classname="com.projeto.jpa.teste.FrutaTeste" name="consultarFruta" time="0.003"/>
+  <testcase classname="com.projeto.jpa.teste.FeiranteJpqlTeste" name="feirantePorNome" time="0.11"/>
 </testsuite>

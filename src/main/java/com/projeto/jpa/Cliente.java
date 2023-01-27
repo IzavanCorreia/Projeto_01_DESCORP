@@ -22,6 +22,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -30,6 +32,16 @@ import java.util.HashSet;
 
 @Entity
 @Table(name = "TB_CLIENTE")
+
+@NamedQueries(
+        {
+            @NamedQuery(
+                    name = "Cliente.PorNome",
+                    query = "SELECT c FROM Cliente c WHERE c.nome LIKE :nome ORDER BY c.id"
+            )
+        }
+)
+
 public class Cliente {
     
     @Id
